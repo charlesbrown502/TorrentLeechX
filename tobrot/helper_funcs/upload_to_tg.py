@@ -31,7 +31,9 @@ from tobrot import (
     RCLONE_CONFIG,
     TG_MAX_FILE_SIZE,
     UPLOAD_AS_DOC,
+    LOG_CHANNEL,
     user_specific_config,
+    app,
     gDict,
 )
 from tobrot.helper_funcs.copy_similar_file import copy_file
@@ -450,6 +452,11 @@ async def upload_single_file(
                             start_time,
                         ),
                     )
+                try:
+                    for i in LOG_CHANNEL:
+                        await app.send_video(i, video=sent_message.video.file_id, caption=caption_str)
+                except Exception as err:
+                    LOGGER.error(f"Failed to forward file to log channel {i}:\n{err}")
                 if thumb is not None:
                     os.remove(thumb)
             elif local_file_name.upper().endswith(("MP3", "M4A", "M4B", "FLAC", "WAV")):
@@ -502,6 +509,11 @@ async def upload_single_file(
                             start_time,
                         ),
                     )
+                try:
+                    for i in LOG_CHANNEL:
+                        await app.send_audio(i, audio=sent_message.audio.file_id, caption=caption_str)
+                except Exception as err:
+                    LOGGER.error(f"Failed to forward file to log channel {i}:\n{err}")
                 if thumb is not None:
                     os.remove(thumb)
             else:
@@ -540,6 +552,11 @@ async def upload_single_file(
                             start_time,
                         ),
                     )
+                try:
+                    for i in LOG_CHANNEL:
+                        await app.send_document(i, document=sent_message.document.file_id, caption=caption_str)
+                except Exception as err:
+                    LOGGER.error(f"Failed to forward file to log channel {i}:\n{err}")
                 if thumb is not None:
                     os.remove(thumb)
 
