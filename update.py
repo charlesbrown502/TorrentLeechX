@@ -2,8 +2,26 @@ import os
 import time
 import requests
 import logging
+from logging.handlers import RotatingFileHandler
 
 from dotenv import load_dotenv
+
+if os.path.exists("TorrentLeech-Gdrive.txt"):
+    with open("Torrentleech-Gdrive.txt", "r+") as f_d:
+        f_d.truncate(0)
+
+# the logging things
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s - %(levelname)s - %(message)s [%(filename)s:%(lineno)d]",
+    datefmt="%d-%b-%y %H:%M:%S",
+    handlers=[
+        RotatingFileHandler(
+            "Torrentleech-Gdrive.txt", maxBytes=50000000, backupCount=10
+        ),
+        logging.StreamHandler(),
+    ],
+)
 
 CONFIG_FILE_URL = os.environ.get('CONFIG_FILE_URL', None)
 try:
